@@ -1,0 +1,7 @@
+# Edge Cases for Conformance
+
+array_missing_bracket: [ 1, 2, 3
+malformed_string: "hello
+unclosed_object: {
+    prop: 1
+invalid_utf8: "\xFF\xFE\xFD"

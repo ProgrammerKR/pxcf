@@ -171,6 +171,46 @@ int main() {
 
 ---
 
+## 🌍 Language Ecosystem & Publishing
+
+Since PXCF 2.1 is designed as a standalone ecosystem, the language bindings can be packaged and published using their native toolchains targeting the single hardened C11 engine.
+
+### Python (PyPI)
+The Python C-Extension natively bridges the parser into Python dictionaries.
+```bash
+cd bindings/python
+python -m pip install .
+python -m build
+python -m twine upload dist/*
+```
+
+### JavaScript / TypeScript (npm)
+The JavaScript binding compiles the C11 core to WebAssembly via Emscripten. Requires `emcc` and `Node.js` installed.
+```bash
+cd bindings/javascript
+npm run build
+npm publish
+```
+
+### Rust (crates.io)
+The safe Rust idiomatic crate binds the native parser using the `cc` build system via FFI.
+```bash
+cd bindings/rust
+cargo build --release
+cargo publish
+```
+
+### Go
+Go handles packaging directly from the VCS repository using `cgo`.
+```bash
+go get github.com/ProgrammerKR/pxcf/bindings/go
+```
+
+### ProXPL
+Integrations into the ProX programming language runtime are structurally prepared inside `integrations/proxpl/`.
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions!

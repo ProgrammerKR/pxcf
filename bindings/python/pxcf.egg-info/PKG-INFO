@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: pxcf
+Version: 1.0.0
+Summary: ProX Configuration File (PXCF) Parser
+Author: ProgrammerKR
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: C
+Dynamic: author
+Dynamic: classifier
+Dynamic: summary

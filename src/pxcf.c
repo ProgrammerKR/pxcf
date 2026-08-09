@@ -78,8 +78,10 @@ PxcfDocument* pxcf_load_file(const char* path, PxcfError* error) {
 
     PxcfDocument* doc = pxcf_parse_internal(buffer, bytes_read, error);
     if (error && error->code != PXCF_SUCCESS) {
-        strncpy(error->file_path, path, sizeof(error->file_path) - 1);
-        error->file_path[sizeof(error->file_path) - 1] = '\0';
+        size_t path_len = strlen(path);
+        size_t copy_len = path_len < (sizeof(error->file_path) - 1) ? path_len : (sizeof(error->file_path) - 1);
+        memcpy(error->file_path, path, copy_len);
+        error->file_path[copy_len] = '\0';
     }
 
     free(buffer);

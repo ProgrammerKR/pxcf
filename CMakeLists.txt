@@ -65,6 +65,30 @@ install(TARGETS pxcf
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(DIRECTORY include/pxcf DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT pxcfTargets
+    FILE pxcfTargets.cmake
+    NAMESPACE PXCF::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pxcf
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "pxcfConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/pxcfConfig.cmake
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/pxcfTargets.cmake\")\n"
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/pxcfConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/pxcfConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pxcf
+)
+
 if(PXCF_BUILD_CLI)
     install(TARGETS pxcf_cli RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()

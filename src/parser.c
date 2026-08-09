@@ -16,8 +16,10 @@ static void error_at(Parser* parser, Token* token, const char* message, PxcfErro
         parser->error_out->line = token->line;
         parser->error_out->column = token->column;
         parser->error_out->offset = token->offset;
-        strncpy(parser->error_out->message, message, sizeof(parser->error_out->message) - 1);
-        parser->error_out->message[sizeof(parser->error_out->message) - 1] = '\0';
+        size_t msg_len = strlen(message);
+        size_t copy_len = msg_len < (sizeof(parser->error_out->message) - 1) ? msg_len : (sizeof(parser->error_out->message) - 1);
+        memcpy(parser->error_out->message, message, copy_len);
+        parser->error_out->message[copy_len] = '\0';
     }
 }
 
