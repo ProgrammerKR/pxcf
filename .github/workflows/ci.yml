@@ -1,4 +1,4 @@
-name: CI
+name: PXCF CI
 
 on:
   push:
@@ -7,22 +7,37 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  core_build_and_test:
+    name: Build & Test C11 Core (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        build_type: [Debug, Release]
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+      run: cmake --build build --config Release
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -V
+    - name: Run Tests
+      run: ctest --test-dir build -C Release --output-on-failure
+
+  python_test:
+    name: Python Package Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: python -m pip install --upgrade pip build
+    - name: Install Package
+      run: cd bindings/python && pip install .
+    - name: Run Python Unittests
+      run: cd bindings/python && python -m unittest discover -s tests -v

@@ -1,0 +1,6 @@
+# Malformed numbers
+bad_num1: 42.
+bad_num2: .5
+bad_num3: -
+# Unexpected EOF
+unclosed: [ 1, 2

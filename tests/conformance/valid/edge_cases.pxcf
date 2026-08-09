@@ -1,0 +1,13 @@
+# Valid Conformance Additions
+escapes: "\n\t\r\"\\"
+unicode: "Hello, 世界"
+mixed: [
+    1,
+    -42.5,
+    { inner: null },
+    true,
+    false,
+    "string"
+]
+# Nested
+deep: { a: { b: { c: [ 1, 2 ] } } }

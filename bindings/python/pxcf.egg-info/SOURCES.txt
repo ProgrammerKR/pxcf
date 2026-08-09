@@ -1,3 +1,4 @@
+pyproject.toml
 setup.py
 ../../src/error.c
 ../../src/lexer.c
@@ -17,3 +18,4 @@ pxcf.egg-info/PKG-INFO
 pxcf.egg-info/SOURCES.txt
 pxcf.egg-info/dependency_links.txt
 pxcf.egg-info/top_level.txt
+tests/test_core.py

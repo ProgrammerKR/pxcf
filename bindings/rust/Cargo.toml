@@ -3,12 +3,10 @@ name = "pxcf"
 version = "1.0.0"
 edition = "2021"
 authors = ["ProgrammerKR"]
-description = "ProX Configuration File (PXCF) Parser"
+description = "ProX Configuration File (PXCF) Parser Bindings"
 license = "MIT"
-build = "build.rs"
-
-[dependencies]
-libc = "0.2"
+readme = "../../README.md"
+repository = "https://github.com/ProgrammerKR/pxcf"
 
 [build-dependencies]
 cc = "1.0"

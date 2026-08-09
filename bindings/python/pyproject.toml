@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pxcf"
+version = "1.0.0"
+description = "ProX Configuration File (PXCF) Parser"
+authors = [
+    { name = "ProgrammerKR", email = "author@example.com" }
+]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = []
+
+[project.urls]
+"Homepage" = "https://github.com/ProgrammerKR/pxcf"
