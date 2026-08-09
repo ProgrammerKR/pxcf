@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define PXCF_MAX_FILE_SIZE (20 * 1024 * 1024)
+
+
 PxcfDocument* pxcf_parse_string(const char* source, size_t length, PxcfError* error) {
     if (!source) return NULL;
     return pxcf_parse_internal(source, length, error);
@@ -36,6 +39,17 @@ PxcfDocument* pxcf_load_file(const char* path, PxcfError* error) {
         }
         return NULL;
     }
+
+    if (file_size > PXCF_MAX_FILE_SIZE) {
+        fclose(file);
+        if (error) {
+            pxcf_error_init(error);
+            error->code = PXCF_ERROR_IO;
+            snprintf(error->message, sizeof(error->message), "File '%s' exceeds maximum allowed size (20MB).", path);
+        }
+        return NULL;
+    }
+
 
     char* buffer = (char*)malloc(file_size + 1);
     if (!buffer) {

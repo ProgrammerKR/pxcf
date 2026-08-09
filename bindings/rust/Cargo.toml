@@ -1,0 +1,14 @@
+[package]
+name = "pxcf"
+version = "1.0.0"
+edition = "2021"
+authors = ["ProgrammerKR"]
+description = "ProX Configuration File (PXCF) Parser"
+license = "MIT"
+build = "build.rs"
+
+[dependencies]
+libc = "0.2"
+
+[build-dependencies]
+cc = "1.0"

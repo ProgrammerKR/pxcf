@@ -1,0 +1,24 @@
+# Basic Valid Conformance Test
+
+project {
+    name: "PXCF"
+    version: 2.0
+    active: true
+    missing: null
+}
+
+numbers {
+    int: 12345
+    neg_int: -12345
+    float: 1.234
+    neg_float: -1.234
+    sci: 1e6
+}
+
+array_test: [
+    1,
+    2.5,
+    "three",
+    true,
+    null
+]

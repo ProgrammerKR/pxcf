@@ -5,8 +5,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Options
-option(PXCF_BUILD_CLI "Build the PXCF command-line tool" ON)
-option(PXCF_BUILD_TESTS "Build the PXCF test suite" ON)
+option(PXCF_BUILD_CLI "Build the pxcf CLI tool" ON)
+option(PXCF_BUILD_TESTS "Build the test suite" ON)
+option(PXCF_BUILD_FUZZERS "Build the fuzz targets (requires clang)" OFF)
+
 option(PXCF_BUILD_SHARED "Build a shared library" OFF)
 option(PXCF_BUILD_BENCHMARKS "Build the benchmarks" OFF)
 option(PXCF_ENABLE_SANITIZERS "Enable Address and UndefinedBehavior sanitizers" OFF)
@@ -53,4 +55,16 @@ endif()
 if(PXCF_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
+endif()
+include(GNUInstallDirs)
+install(TARGETS pxcf
+    EXPORT pxcfTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(DIRECTORY include/pxcf DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+if(PXCF_BUILD_CLI)
+    install(TARGETS pxcf_cli RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()

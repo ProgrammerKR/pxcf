@@ -1,0 +1,13 @@
+{
+  "name": "pxcf",
+  "version": "1.0.0",
+  "description": "ProX Configuration File (PXCF) parser via WebAssembly",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build:wasm": "emcc ../../src/*.c -I../../include -I../../src -o dist/pxcf.wasm -s EXPORTED_FUNCTIONS='[\"_pxcf_parse_string\", \"_pxcf_document_free\"]'",
+    "build": "npm run build:wasm && tsc"
+  },
+  "author": "ProgrammerKR",
+  "license": "MIT"
+}

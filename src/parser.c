@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <errno.h>
 
 static void error_at(Parser* parser, Token* token, const char* message, PxcfErrorCode code) {
     if (parser->panic_mode) return;
@@ -187,15 +188,27 @@ static PxcfValue* parse_value(Parser* parser) {
         size_t len = parser->previous.length < 63 ? parser->previous.length : 63;
         memcpy(buf, parser->previous.start, len);
         buf[len] = '\0';
+        
+        errno = 0;
         int64_t i = strtoll(buf, NULL, 10);
-        value = pxcf_value_new_integer(i);
+        if (errno == ERANGE) {
+            error(parser, "Integer value is out of range.", PXCF_ERROR_INVALID_NUMBER);
+        } else {
+            value = pxcf_value_new_integer(i);
+        }
     } else if (match(parser, TOKEN_FLOAT)) {
         char buf[128];
         size_t len = parser->previous.length < 127 ? parser->previous.length : 127;
         memcpy(buf, parser->previous.start, len);
         buf[len] = '\0';
+        
+        errno = 0;
         double d = strtod(buf, NULL);
-        value = pxcf_value_new_float(d);
+        if (errno == ERANGE) {
+            error(parser, "Float value is out of range.", PXCF_ERROR_INVALID_NUMBER);
+        } else {
+            value = pxcf_value_new_float(d);
+        }
     } else if (match(parser, TOKEN_STRING)) {
         char* str = extract_string(parser, &parser->previous);
         if (str) {
