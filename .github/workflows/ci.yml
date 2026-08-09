@@ -40,4 +40,4 @@ jobs:
     - name: Install Package
       run: cd bindings/python && pip install .
     - name: Run Python Unittests
-      run: cd bindings/python && python -m unittest discover -s tests -v
+      run: cd bindings/python/tests && python -m unittest discover -v
