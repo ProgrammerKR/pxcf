@@ -1,0 +1,49 @@
+# ProXPL Project Configuration
+
+project {
+    name: "ExampleProject"
+    version: "1.0.0"
+    language: "proxpl"
+    entry: "src/main.prox"
+
+    authors: [
+        "ProgrammerKR"
+    ]
+}
+
+build {
+    mode: "release"
+    target: "native"
+
+    optimization: true
+    debug: false
+
+    threads: 8
+}
+
+runtime {
+    jit: true
+    garbage_collection: true
+
+    memory_limit: 512
+}
+
+dependencies {
+    http: "1.2.0"
+    json: "2.0.1"
+}
+
+features {
+    experimental: false
+    warnings: true
+}
+
+server {
+    host: "localhost"
+    port: 8080
+
+    security {
+        tls: false
+        certificate: null
+    }
+}
