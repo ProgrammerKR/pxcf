@@ -30,6 +30,25 @@ class TestPxcf(unittest.TestCase):
         with self.assertRaises(SyntaxError) as context:
             pxcf.loads("server: 1 server: 2")
         self.assertTrue("Duplicate key" in str(context.exception))
+        
+    def test_dumps(self):
+        obj = {
+            "server": {
+                "port": 8080,
+                "host": "localhost",
+                "active": True,
+                "ssl": None
+            },
+            "arr": [1, 2, 3]
+        }
+        out = pxcf.dumps(obj)
+        self.assertTrue("port: 8080" in out)
+        self.assertTrue("active: true" in out)
+        
+        # Roundtrip
+        doc = pxcf.loads(out)
+        self.assertEqual(doc["server"]["port"], 8080)
+        self.assertEqual(doc["arr"], [1, 2, 3])
 
 if __name__ == '__main__':
     unittest.main()

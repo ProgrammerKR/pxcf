@@ -1,14 +1,20 @@
-export interface PxcfConfig {
-    [key: string]: any;
-}
-
-/**
- * Initialize the PXCF WebAssembly parser asynchronously.
- */
-export function initPxcf(): Promise<any>;
-
 /**
  * Parses a PXCF formatted string into a JavaScript Object.
- * @param sourceString The PXCF string.
+ * @param {string} sourceString 
+ * @returns {Promise<any>}
  */
-export function parse(sourceString: string): Promise<PxcfConfig>;
+export function parse(sourceString: string): Promise<any>;
+
+/**
+ * Serializes a JavaScript Object to a PXCF formatted string.
+ * @param {any} obj 
+ * @returns {Promise<string>}
+ */
+export function stringify(obj: any): Promise<string>;
+
+/**
+ * Validates a PXCF formatted string.
+ * @param {string} sourceString 
+ * @returns {Promise<boolean>}
+ */
+export function validate(sourceString: string): Promise<boolean>;

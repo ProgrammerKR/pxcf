@@ -73,6 +73,50 @@ static PyObject* pxcf_value_to_py(PxcfValue* val) {
     }
 }
 
+static PxcfValue* py_to_pxcf_value(PyObject* obj) {
+    if (obj == Py_None) {
+        return pxcf_value_new_null();
+    } else if (PyBool_Check(obj)) {
+        return pxcf_value_new_bool(obj == Py_True);
+    } else if (PyLong_Check(obj)) {
+        return pxcf_value_new_integer(PyLong_AsLongLong(obj));
+    } else if (PyFloat_Check(obj)) {
+        return pxcf_value_new_float(PyFloat_AsDouble(obj));
+    } else if (PyUnicode_Check(obj)) {
+        Py_ssize_t size;
+        const char* s = PyUnicode_AsUTF8AndSize(obj, &size);
+        if (s) {
+            return pxcf_value_new_string(s, (size_t)size);
+        }
+    } else if (PyList_Check(obj)) {
+        PxcfValue* arr = pxcf_value_new_array();
+        Py_ssize_t size = PyList_Size(obj);
+        for (Py_ssize_t i = 0; i < size; i++) {
+            PyObject* item = PyList_GetItem(obj, i); // borrowed ref
+            PxcfValue* pxcf_item = py_to_pxcf_value(item);
+            if (pxcf_item) {
+                pxcf_array_append(arr, pxcf_item);
+            }
+        }
+        return arr;
+    } else if (PyDict_Check(obj)) {
+        PxcfValue* dict = pxcf_value_new_object();
+        PyObject *key, *value;
+        Py_ssize_t pos = 0;
+        while (PyDict_Next(obj, &pos, &key, &value)) {
+            if (PyUnicode_Check(key)) {
+                const char* key_str = PyUnicode_AsUTF8(key);
+                PxcfValue* pxcf_val = py_to_pxcf_value(value);
+                if (key_str && pxcf_val) {
+                    pxcf_object_set(dict, key_str, pxcf_val);
+                }
+            }
+        }
+        return dict;
+    }
+    return pxcf_value_new_null(); // Fallback
+}
+
 static PyObject* parse_string(PyObject* self, PyObject* args) {
     const char* source;
     Py_ssize_t length;
@@ -94,8 +138,37 @@ static PyObject* parse_string(PyObject* self, PyObject* args) {
     return result;
 }
 
+static PyObject* dump_string(PyObject* self, PyObject* args) {
+    PyObject* py_dict;
+    
+    if (!PyArg_ParseTuple(args, "O", &py_dict)) {
+        return NULL;
+    }
+    
+    PxcfValue* val = py_to_pxcf_value(py_dict);
+    if (!val) {
+        PyErr_SetString(PyExc_ValueError, "Failed to convert Python object to PXCF value.");
+        return NULL;
+    }
+    
+    char* out_str = NULL;
+    PxcfError err;
+    bool ok = pxcf_serialize_string(val, &out_str, &err);
+    pxcf_value_free(val);
+    
+    if (!ok) {
+        PyErr_Format(PyExc_RuntimeError, "Failed to serialize: %s", err.message);
+        return NULL;
+    }
+    
+    PyObject* result = PyUnicode_FromString(out_str);
+    free(out_str);
+    return result;
+}
+
 static PyMethodDef PxcfMethods[] = {
     {"parse_string", parse_string, METH_VARARGS, "Parse a PXCF string."},
+    {"dump_string", dump_string, METH_VARARGS, "Serialize a dictionary to a PXCF string."},
     {NULL, NULL, 0, NULL}
 };
 

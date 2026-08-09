@@ -18,7 +18,12 @@ pub enum PxcfDocument {}
 extern "C" {
     pub fn pxcf_parse_string(source: *const c_char, length: usize, error: *mut PxcfError) -> *mut PxcfDocument;
     pub fn pxcf_document_free(document: *mut PxcfDocument);
-    // Bind more as needed
+    pub fn pxcf_document_root(document: *mut PxcfDocument) -> *mut PxcfValue;
+    pub fn pxcf_serialize_string(value: *const PxcfValue, out_str: *mut *mut c_char, error: *mut PxcfError) -> bool;
+}
+
+extern "C" {
+    fn free(ptr: *mut std::ffi::c_void);
 }
 
 pub struct Document {
@@ -45,6 +50,26 @@ impl Document {
         
         Ok(Self { ptr })
     }
+
+    pub fn to_string(&self) -> Result<String, String> {
+        let mut err = PxcfError {
+            code: 0, line: 0, column: 0, offset: 0,
+            message: [0; 256], file_path: [0; 256],
+        };
+        let mut out_str: *mut c_char = ptr::null_mut();
+        
+        let root = unsafe { pxcf_document_root(self.ptr) };
+        let ok = unsafe { pxcf_serialize_string(root, &mut out_str, &mut err) };
+        
+        if !ok {
+            let msg = unsafe { CStr::from_ptr(err.message.as_ptr()) };
+            return Err(format!("Serialize error {}: {}", err.code, msg.to_string_lossy()));
+        }
+        
+        let result = unsafe { CStr::from_ptr(out_str) }.to_string_lossy().into_owned();
+        unsafe { free(out_str as *mut std::ffi::c_void) };
+        Ok(result)
+    }
 }
 
 impl Drop for Document {
@@ -52,5 +77,30 @@ impl Drop for Document {
         if !self.ptr.is_null() {
             unsafe { pxcf_document_free(self.ptr) };
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse() {
+        let doc = Document::parse("key: 123");
+        assert!(doc.is_ok());
+    }
+
+    #[test]
+    fn test_serialize() {
+        let doc = Document::parse("key: 123").unwrap();
+        let serialized = doc.to_string().unwrap();
+        assert!(serialized.contains("key"));
+        assert!(serialized.contains("123"));
+    }
+    
+    #[test]
+    fn test_invalid_parse() {
+        let doc = Document::parse("key: ");
+        assert!(doc.is_err());
     }
 }

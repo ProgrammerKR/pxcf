@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pxcf"
-version = "1.0.0"
+version = "3.0.0"
 description = "ProX Configuration File (PXCF) Parser"
 authors = [
     { name = "ProgrammerKR", email = "author@example.com" }

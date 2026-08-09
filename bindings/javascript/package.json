@@ -1,12 +1,12 @@
 {
   "name": "pxcf",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "ProX Configuration File (PXCF) Parser WebAssembly Bindings",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "emcc ../../src/*.c -I../../include -I../../src -o dist/pxcf.wasm -s EXPORTED_FUNCTIONS='[\"_pxcf_parse_string\", \"_pxcf_document_free\", \"_pxcf_object_size\", \"_pxcf_object_get_index\"]' -s EXPORTED_RUNTIME_METHODS='[\"ccall\",\"cwrap\"]' -O3",
-    "test": "echo \"Implemented - Awaiting Environment Validation\""
+    "test": "node test.js"
   },
   "author": "ProgrammerKR",
   "license": "MIT"

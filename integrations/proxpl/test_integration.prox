@@ -1,0 +1,11 @@
+import pxcf
+
+// Test parsing configuration using the native module
+let config = pxcf.parse("server: 8080 active: true")
+
+print("Port:", config.server)
+print("Is Active:", config.active)
+
+// Serialize back out
+let out = pxcf.stringify(config)
+print("Serialized:\n", out)

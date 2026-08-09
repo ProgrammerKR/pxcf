@@ -1,6 +1,8 @@
 # PXCF — ProX Configuration File
 
-PXCF is a robust, production-quality, and completely standalone configuration format and parsing ecosystem written in pure C11. 
+<p align="center">
+  <strong>PXCF is a deterministic, strongly typed, human-readable, language-agnostic configuration and data serialization format with a zero-dependency C11 core.</strong>
+</p>
 
 Designed originally for the **ProXPL** language ecosystem, PXCF has evolved into a fully independent, language-agnostic data serialization format. It marries the robust, predictable structure of JSON with the clean, human-friendly readability of TOML and YAML, without inheriting their respective complexities and edge-case ambiguities.
 
@@ -184,7 +186,7 @@ python -m build
 python -m twine upload dist/*
 ```
 
-### JavaScript / TypeScript (npm) `[Implemented — Awaiting External Validation]`
+### JavaScript / TypeScript (npm) `[IMPLEMENTED — NOT LOCALLY VALIDATED]`
 The JavaScript binding compiles the C11 core to WebAssembly via Emscripten. Requires `emcc` and `Node.js` installed.
 ```bash
 cd bindings/javascript
@@ -192,7 +194,7 @@ npm run build
 npm publish
 ```
 
-### Rust (crates.io) `[Implemented — Awaiting External Validation]`
+### Rust (crates.io) `[IMPLEMENTED — NOT LOCALLY VALIDATED]`
 The safe Rust idiomatic crate binds the native parser using the `cc` build system via FFI.
 ```bash
 cd bindings/rust
@@ -200,13 +202,13 @@ cargo build --release
 cargo publish
 ```
 
-### Go `[Implemented — Awaiting External Validation]`
+### Go `[IMPLEMENTED — NOT LOCALLY VALIDATED]`
 Go handles packaging directly from the VCS repository using `cgo`.
 ```bash
 go get github.com/ProgrammerKR/pxcf/bindings/go
 ```
 
-### ProXPL `[Implemented — Awaiting External Validation]`
+### ProXPL `[IMPLEMENTED — NOT LOCALLY VALIDATED]`
 Integrations into the ProX programming language runtime are structurally prepared inside `integrations/proxpl/`.
 
 ---

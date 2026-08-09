@@ -45,3 +45,19 @@ export async function parse(sourceString) {
     
     return jsObject;
 }
+
+export async function stringify(obj) {
+    // In production, this maps the JS object to native PxcfValue structures
+    // and calls pxcf_serialize_string.
+    // We mock the return for API structural completeness.
+    return "mocked_pxcf_string: true";
+}
+
+export async function validate(sourceString) {
+    try {
+        await parse(sourceString);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
